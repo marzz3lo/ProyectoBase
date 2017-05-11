@@ -46,6 +46,8 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     boolean recargarRecurso = false;
     private boolean guardarSiguienteImagen = false;
 
+    Procesador procesador;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +117,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     public void onCameraViewStarted(int width, int height) {
         cam_altura = height;
         cam_anchura = width;
+        procesador = new Procesador();
     }
 
     @Override
@@ -141,7 +144,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             }
             entrada = imagenRecurso_;
         }
-        Mat salida = entrada.clone();
+        Mat salida = procesador.procesa(entrada);
 
         if (guardarSiguienteImagen) {//Para foto salida debe ser rgba
             takePhoto(entrada, salida);
