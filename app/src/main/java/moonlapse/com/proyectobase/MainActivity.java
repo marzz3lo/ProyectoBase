@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat entrada;
         if (tipoEntrada == 0) {
-            entrada = inputFrame.gray();
+            entrada = inputFrame.rgba();
         } else {
             if (recargarRecurso == true) {
                 imagenRecurso_ = new Mat();
@@ -145,7 +145,6 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             entrada = imagenRecurso_;
         }
         Mat salida = procesador.procesa(entrada);
-        procesador.mitadMitad(entrada, salida);
 
         if (guardarSiguienteImagen) {//Para foto salida debe ser rgba
             takePhoto(entrada, salida);
@@ -155,6 +154,10 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 //Es necesario que el tamaño de la salida coincida con el real de captura
             Imgproc.resize(salida, salida, new Size(cam_anchura, cam_altura));
         }
+
+        if(salida.channels() == 1)
+            Imgproc.cvtColor(salida, salida, Imgproc.COLOR_GRAY2RGBA);
+
         return salida;
 
     }
