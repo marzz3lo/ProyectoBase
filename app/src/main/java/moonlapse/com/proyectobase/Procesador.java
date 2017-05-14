@@ -36,38 +36,44 @@ public class Procesador {
 
     public Mat procesa(Mat entrada) {
         Mat salida = new Mat();
-        imagenes.clear(); //Eliminar imagen anterior si la hay
-        imagenes.add(entrada); //Añadir imagen actual
-        Imgproc.calcHist(imagenes, canales, new Mat(), hist, numero_bins, intervalo);
-//Lectura del histograma a un array de float
-        hist.get(0, 0, histograma);
-//Calcular xmin y xmax
-        int total_pixeles = entrada.cols() * entrada.rows();
-        float porcentaje_saturacion = (float) 0.05;
-        int pixeles_saturados = (int) (porcentaje_saturacion * total_pixeles);
-        int xmin = 0;
-        int xmax = 255;
-        float acumulado = 0f;
-        for (int n = 0; n < 256; n++) { //xmin
-            acumulado = acumulado + histograma[n];
-            if (acumulado > pixeles_saturados) {
-                xmin = n;
-                break;
-            }
-        }
-        acumulado = 0;
-        for (int n = 255; n >= 0; n--) { //xmax
-            acumulado = acumulado + histograma[n];
-            if (acumulado > pixeles_saturados) {
-                xmax = n;
-                break;
-            }
-        }
-//Calculo de la salida
-        Core.subtract(entrada, new Scalar(xmin), salida);
-        float pendiente = ((float) 255.0) / ((float) (xmax - xmin));
-        Core.multiply(salida, new Scalar(pendiente), salida);
+        Imgproc.equalizeHist(entrada, salida);
         return salida;
+
+
+
+//        Mat salida = new Mat();
+//        imagenes.clear(); //Eliminar imagen anterior si la hay
+//        imagenes.add(entrada); //Añadir imagen actual
+//        Imgproc.calcHist(imagenes, canales, new Mat(), hist, numero_bins, intervalo);
+////Lectura del histograma a un array de float
+//        hist.get(0, 0, histograma);
+////Calcular xmin y xmax
+//        int total_pixeles = entrada.cols() * entrada.rows();
+//        float porcentaje_saturacion = (float) 0.05;
+//        int pixeles_saturados = (int) (porcentaje_saturacion * total_pixeles);
+//        int xmin = 0;
+//        int xmax = 255;
+//        float acumulado = 0f;
+//        for (int n = 0; n < 256; n++) { //xmin
+//            acumulado = acumulado + histograma[n];
+//            if (acumulado > pixeles_saturados) {
+//                xmin = n;
+//                break;
+//            }
+//        }
+//        acumulado = 0;
+//        for (int n = 255; n >= 0; n--) { //xmax
+//            acumulado = acumulado + histograma[n];
+//            if (acumulado > pixeles_saturados) {
+//                xmax = n;
+//                break;
+//            }
+//        }
+////Calculo de la salida
+//        Core.subtract(entrada, new Scalar(xmin), salida);
+//        float pendiente = ((float) 255.0) / ((float) (xmax - xmin));
+//        Core.multiply(salida, new Scalar(pendiente), salida);
+//        return salida;
     }
 
     void mitadMitad(Mat entrada, Mat salida) {
